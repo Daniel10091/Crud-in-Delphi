@@ -1,0 +1,89 @@
+unit UntFormulario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UntPessoa, Vcl.StdCtrls,
+  System.Generics.Collections, Data.DB, MemDS, DBAccess, Ora, Vcl.Grids,
+  Vcl.DBGrids, OraCall, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Mask;
+
+
+
+
+type
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    Panel4: TPanel;
+    Label1: TLabel;
+    Label2: TLabel;
+    salvar: TButton;
+    Label3: TLabel;
+    Button1: TButton;
+    DBEdit1: TDBEdit;
+    DBEdit2: TDBEdit;
+    DBEdit4: TDBEdit;
+    Button2: TButton;
+    procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure salvarClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+  private
+    procedure Adicionar;
+    { Private declarations }
+  public
+    { Public declarations }
+    Pessoas: TList<tPessoa>;
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit1;
+
+
+{ TForm1 }
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  DMSistema.OraQuery1.Insert;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+    DMSistema.OraQuery1.Edit;
+end;
+
+procedure TForm1.salvarClick(Sender: TObject);
+var i: TPessoa;
+begin
+   //for I in pessoas do
+   //ShowMessage(i.nome);
+     Adicionar;
+     
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+
+   Pessoas := TList<tPessoa>.Create;
+   Pessoas.Clear;
+end;
+
+procedure TForm1.Adicionar;
+begin
+
+  
+
+  DMSistema.OraQuery1.ApplyUpdates;
+
+end;
+
+
+end.

@@ -1,0 +1,39 @@
+unit Unit1;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, Data.DB, MemDS, DBAccess, Ora, OraCall;
+
+type
+  TDMSistema = class(TDataModule)
+    DataSource1: TDataSource;
+    OraQuery1: TOraQuery;
+    OraSession1: TOraSession;
+    OraQuery1ID: TFloatField;
+    OraQuery1NOME: TStringField;
+    OraQuery1REGISTRO: TStringField;
+    OraQuery1DATA_CADASTRO: TDateTimeField;
+    procedure DataModuleCreate(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DMSistema: TDMSistema;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TDMSistema.DataModuleCreate(Sender: TObject);
+begin
+   OraSession1.Connect;
+   OraQuery1.Open;
+end;
+
+end.

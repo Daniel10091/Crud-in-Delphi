@@ -1,0 +1,25 @@
+unit UntPessoa;
+
+interface
+
+type
+  TPessoa = class
+  private
+    Fnome: string;
+    procedure Setnome(const Value: string);
+    { Private declarations }
+  public
+    { Public declarations }
+     property nome: string read Fnome write Setnome;
+  end;
+
+implementation
+
+{ TPessoa }
+
+procedure TPessoa.Setnome(const Value: string);
+begin
+  Fnome := Value;
+end;
+
+end.

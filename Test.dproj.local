@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2023/03/02 11:00:55.656,=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/03/02 11:38:23.417,=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2023/03/02 11:39:54.886,C:\Users\cdaniel\Documents\Test-Delphi\UntPessoa.pas=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2023/03/02 11:40:22.382,C:\Users\cdaniel\Documents\Test-Delphi\UntFormulario.pas=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/03/02 11:40:22.382,C:\Users\cdaniel\Documents\Test-Delphi\UntFormulario.dfm=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2023/03/02 11:40:39.223,C:\Users\cdaniel\Documents\Test-Delphi\Test.dproj=C:\Users\cdaniel\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2023/03/02 12:28:24.725,=C:\Users\cdaniel\Documents\Test-Delphi\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

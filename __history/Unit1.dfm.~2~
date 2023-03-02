@@ -1,0 +1,58 @@
+object DataModule1: TDataModule1
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 286
+  Width = 384
+  object DataSource1: TDataSource
+    DataSet = OraQuery1
+    Left = 32
+    Top = 24
+  end
+  object OraQuery1: TOraQuery
+    SQLInsert.Strings = (
+      'INSERT INTO PESSOA'
+      '  (ID, NOME, REGISTRO, DATA_CADASTRO)'
+      'VALUES'
+      '  (:ID, :NOME, :REGISTRO, :DATA_CADASTRO)')
+    SQLDelete.Strings = (
+      'DELETE FROM PESSOA'
+      'WHERE'
+      '  ID = :Old_ID')
+    SQLUpdate.Strings = (
+      'UPDATE PESSOA'
+      'SET'
+      
+        '  ID = :ID, NOME = :NOME, REGISTRO = :REGISTRO, DATA_CADASTRO = ' +
+        ':DATA_CADASTRO'
+      'WHERE'
+      '  ID = :Old_ID')
+    SQLLock.Strings = (
+      'SELECT ID, NOME, REGISTRO, DATA_CADASTRO FROM PESSOA'
+      'WHERE'
+      '  ID = :Old_ID'
+      'FOR UPDATE NOWAIT')
+    SQLRefresh.Strings = (
+      'SELECT ID, NOME, REGISTRO, DATA_CADASTRO FROM PESSOA'
+      'WHERE'
+      '  ID = :ID')
+    SQLRecCount.Strings = (
+      'SELECT Count(*) FROM ('
+      'SELECT * FROM PESSOA'
+      ''
+      ')')
+    SQL.Strings = (
+      'select * from pessoa')
+    Left = 32
+    Top = 80
+  end
+  object OraSession1: TOraSession
+    Options.Direct = True
+    Username = 'SISTEMA'
+    Server = 'localhost:1521:xe'
+    Connected = True
+    LoginPrompt = False
+    Left = 48
+    Top = 152
+    EncryptedPassword = 'ACFFB6FFACFFABFFBAFFB2FFBEFF'
+  end
+end
