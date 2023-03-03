@@ -9,9 +9,6 @@ uses
   Vcl.DBGrids, OraCall, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.ComCtrls,
   Vcl.ToolWin, System.ImageList, Vcl.ImgList;
 
-
-
-
 type
   TForm1 = class(TForm)
     Panel1: TPanel;
@@ -19,11 +16,11 @@ type
     DBGrid1: TDBGrid;
     Panel4: TPanel;
     PnlCampos: TPanel;
-    DBEdit4: TDBEdit;
+    FldNome: TDBEdit;
     Label1: TLabel;
-    DBEdit1: TDBEdit;
+    FldRegistro: TDBEdit;
     Label2: TLabel;
-    DBEdit2: TDBEdit;
+    FldId: TDBEdit;
     Label3: TLabel;
     ToolBar1: TToolBar;
     BtnNovo: TToolButton;
@@ -31,14 +28,16 @@ type
     BtnCancelar: TToolButton;
     BtnSalvar: TToolButton;
     ImageList1: TImageList;
+    BtnDeletar: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure BtnNovoClick(Sender: TObject);
     procedure BtnEditarClick(Sender: TObject);
     procedure BtnCancelarClick(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
+    procedure BtnDeletarClick(Sender: TObject);
   private
-    procedure Adicionar;
     { Private declarations }
+    procedure Adicionar;
     procedure habilitar(opcao: Boolean);
     Function ifthen(cond: boolean; aTrue: variant; aFalse:  variant): variant;
     function Decode(valor:Variant; Items:array of Variant):variant;
@@ -60,7 +59,6 @@ uses Unit1;
 { TForm1 }
 
 
-
 procedure TForm1.FormCreate(Sender: TObject);
 begin
 
@@ -75,6 +73,7 @@ begin
   BtnEditar.Enabled := not opcao;
   BtnCancelar.Enabled := opcao;
   BtnSalvar.Enabled := opcao;
+  BtnDeletar.Enabled := not opcao;
 
   DBGrid1.Enabled := not opcao;
   PnlCampos.Enabled := opcao;
@@ -104,8 +103,14 @@ end;
 
 procedure TForm1.BtnEditarClick(Sender: TObject);
 begin
-    DMSistema.OraQuery1.Edit;
-      habilitar(true);
+  DMSistema.OraQuery1.Edit;
+  habilitar(true);
+end;
+
+procedure TForm1.BtnSalvarClick(Sender: TObject);
+begin
+  DMSistema.OraQuery1.Cancel;
+  habilitar(false);
 end;
 
 procedure TForm1.BtnCancelarClick(Sender: TObject);
@@ -123,13 +128,13 @@ if Application.MessageBox('Deseja realmente salvar?','Atenção',36) = 6 then
       end;
     end;
   end;
-     
+
 end;
 
-procedure TForm1.BtnSalvarClick(Sender: TObject);
+procedure TForm1.BtnDeletarClick(Sender: TObject);
 begin
-    DMSistema.OraQuery1.Cancel;
-      habilitar(false);
+  DMSistema.OraQuery1.Delete;
+  habilitar(false);
 end;
 
 function TForm1.Decode(valor:Variant; Items:array of Variant): variant;
