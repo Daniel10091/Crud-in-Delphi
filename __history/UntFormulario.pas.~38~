@@ -1,0 +1,158 @@
+unit UntFormulario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UntPessoa, Vcl.StdCtrls,
+  System.Generics.Collections, Data.DB, MemDS, DBAccess, Ora, Vcl.Grids,
+  Vcl.DBGrids, OraCall, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.ComCtrls,
+  Vcl.ToolWin;
+
+
+
+
+type
+  TForm1 = class(TForm)
+    Panel1: TPanel;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    Panel4: TPanel;
+    BtnCancelar: TButton;
+    PnlCampos: TPanel;
+    DBEdit4: TDBEdit;
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    procedure FormCreate(Sender: TObject);
+    procedure ToolButton1Click(Sender: TObject);
+    procedure ToolButton2Click(Sender: TObject);
+    procedure ToolButton3Click(Sender: TObject);
+    procedure ToolButton4Click(Sender: TObject);
+  private
+    procedure Adicionar;
+    { Private declarations }
+    procedure habilitar(opcao: Boolean);
+    Function ifthen(cond: boolean; aTrue: variant; aFalse:  variant): variant;
+    function Decode(valor:Variant; Items:array of Variant):variant;
+  public
+    { Public declarations }
+    Pessoas: TList<tPessoa>;
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit1;
+
+
+{ TForm1 }
+
+
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+
+  habilitar(false);
+  
+end;
+
+procedure TForm1.habilitar(opcao: Boolean);
+var i: Integer;
+begin
+  BtnNovo.Enabled := not opcao;
+  BtnEditar.Enabled := not opcao;
+  BtnCancelar.Enabled := opcao;
+  BtnSalvar.Enabled := opcao;
+
+  DBGrid1.Enabled := not opcao;
+  PnlCampos.Enabled := opcao;
+  for i := 0 to PnlCampos.ControlCount-1 do
+  begin
+    if (PnlCampos.Controls[i] is TDBEdit) then
+      (PnlCampos.Controls[i] as TDBEdit).Color := ifthen(PnlCampos.Enabled, clWhite, clBtnFace);
+
+    //i := Decode(variavel, [1, 'valor 1', 2, 'valor 2', 'valor 3'])                             
+      
+  end;
+end;
+
+function TForm1.ifthen(cond: boolean; aTrue, aFalse: variant): variant;
+begin
+  if cond then
+    Result := aTrue
+  else
+    Result := aFalse;
+end;
+
+procedure TForm1.ToolButton1Click(Sender: TObject);
+begin
+  DMSistema.OraQuery1.Insert;
+  habilitar(true);
+end;
+
+procedure TForm1.ToolButton2Click(Sender: TObject);
+begin
+    DMSistema.OraQuery1.Edit;
+      habilitar(true);
+end;
+
+procedure TForm1.ToolButton3Click(Sender: TObject);
+begin
+     Adicionar;
+       habilitar(false);
+end;
+
+procedure TForm1.ToolButton4Click(Sender: TObject);
+begin
+    DMSistema.OraQuery1.Cancel;
+      habilitar(false);
+end;
+
+function TForm1.Decode(valor:Variant; Items:array of Variant): variant;
+var I:Integer;
+    Resultado :Variant;
+begin
+  Resultado := null;
+  for I := Low(Items) to High(Items) do
+  begin
+    if not((I Mod 2) = 0 )then
+      Continue
+    else
+    begin
+      if AnsiSameText(valor,Items[I]) then
+      begin
+        Resultado := Items[I+1]
+      end;
+    end;
+  end;
+
+  if Resultado = null then
+  begin
+    if not((High(Items) Mod 2) <> 0 ) then
+      Resultado := Items[High(Items)];
+  end;
+
+  Result := Resultado;
+end;
+
+procedure TForm1.Adicionar;
+begin
+
+  DMSistema.OraQuery1.ApplyUpdates;
+
+end;
+
+
+end.

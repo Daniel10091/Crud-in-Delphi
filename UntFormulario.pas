@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UntPessoa, Vcl.StdCtrls,
   System.Generics.Collections, Data.DB, MemDS, DBAccess, Ora, Vcl.Grids,
-  Vcl.DBGrids, OraCall, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Mask;
+  Vcl.DBGrids, OraCall, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.ComCtrls,
+  Vcl.ToolWin, System.ImageList, Vcl.ImgList;
 
 
 
@@ -17,25 +18,30 @@ type
     Panel2: TPanel;
     DBGrid1: TDBGrid;
     Panel4: TPanel;
-    Label1: TLabel;
-    Label2: TLabel;
-    BtnSalvar: TButton;
-    Label3: TLabel;
-    BtnNovo: TButton;
-    DBEdit1: TDBEdit;
-    DBEdit2: TDBEdit;
+    PnlCampos: TPanel;
     DBEdit4: TDBEdit;
-    BtnEditar: TButton;
-    BtnCancelar: TButton;
-    procedure BtnNovoClick(Sender: TObject);
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    ToolBar1: TToolBar;
+    BtnNovo: TToolButton;
+    BtnEditar: TToolButton;
+    BtnCancelar: TToolButton;
+    BtnSalvar: TToolButton;
+    ImageList1: TImageList;
     procedure FormCreate(Sender: TObject);
-    procedure BtnSalvarClick(Sender: TObject);
+    procedure BtnNovoClick(Sender: TObject);
     procedure BtnEditarClick(Sender: TObject);
     procedure BtnCancelarClick(Sender: TObject);
+    procedure BtnSalvarClick(Sender: TObject);
   private
     procedure Adicionar;
     { Private declarations }
     procedure habilitar(opcao: Boolean);
+    Function ifthen(cond: boolean; aTrue: variant; aFalse:  variant): variant;
+    function Decode(valor:Variant; Items:array of Variant):variant;
   public
     { Public declarations }
     Pessoas: TList<tPessoa>;
@@ -53,33 +59,7 @@ uses Unit1;
 
 { TForm1 }
 
-procedure TForm1.BtnNovoClick(Sender: TObject);
-begin
-  DMSistema.OraQuery1.Insert;
-  habilitar(true);
-end;
 
-procedure TForm1.BtnCancelarClick(Sender: TObject);
-begin
-    DMSistema.OraQuery1.Cancel;
-      habilitar(false);
-end;
-
-procedure TForm1.BtnEditarClick(Sender: TObject);
-begin
-    DMSistema.OraQuery1.Edit;
-      habilitar(true);
-end;
-
-procedure TForm1.BtnSalvarClick(Sender: TObject);
-var i: TPessoa;
-begin
-   //for I in pessoas do
-   //ShowMessage(i.nome);
-     Adicionar;
-       habilitar(false);
-     
-end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -89,6 +69,7 @@ begin
 end;
 
 procedure TForm1.habilitar(opcao: Boolean);
+var i: Integer;
 begin
   BtnNovo.Enabled := not opcao;
   BtnEditar.Enabled := not opcao;
@@ -96,6 +77,86 @@ begin
   BtnSalvar.Enabled := opcao;
 
   DBGrid1.Enabled := not opcao;
+  PnlCampos.Enabled := opcao;
+  for i := 0 to PnlCampos.ControlCount-1 do
+  begin
+    if (PnlCampos.Controls[i] is TDBEdit) then
+      (PnlCampos.Controls[i] as TDBEdit).Color := ifthen(PnlCampos.Enabled, clWhite, clBtnFace);
+
+    //i := Decode(variavel, [1, 'valor 1', 2, 'valor 2', 'valor 3'])                             
+      
+  end;
+end;
+
+function TForm1.ifthen(cond: boolean; aTrue, aFalse: variant): variant;
+begin
+  if cond then
+    Result := aTrue
+  else
+    Result := aFalse;
+end;
+
+procedure TForm1.BtnNovoClick(Sender: TObject);
+begin
+  DMSistema.OraQuery1.Insert;
+  habilitar(true);
+end;
+
+procedure TForm1.BtnEditarClick(Sender: TObject);
+begin
+    DMSistema.OraQuery1.Edit;
+      habilitar(true);
+end;
+
+procedure TForm1.BtnCancelarClick(Sender: TObject);
+begin
+if Application.MessageBox('Deseja realmente salvar?','Atenção',36) = 6 then
+  begin
+    try
+      Adicionar;
+      habilitar(false);
+
+      ShowMessage('dados salvos com suceso!');
+    except on E: Exception do
+      begin
+      ShowMessage('Erro ao salvar!' + #13 + 'Erro: ' + E.Message);
+      end;
+    end;
+  end;
+     
+end;
+
+procedure TForm1.BtnSalvarClick(Sender: TObject);
+begin
+    DMSistema.OraQuery1.Cancel;
+      habilitar(false);
+end;
+
+function TForm1.Decode(valor:Variant; Items:array of Variant): variant;
+var I:Integer;
+    Resultado :Variant;
+begin
+  Resultado := null;
+  for I := Low(Items) to High(Items) do
+  begin
+    if not((I Mod 2) = 0 )then
+      Continue
+    else
+    begin
+      if AnsiSameText(valor,Items[I]) then
+      begin
+        Resultado := Items[I+1]
+      end;
+    end;
+  end;
+
+  if Resultado = null then
+  begin
+    if not((High(Items) Mod 2) <> 0 ) then
+      Resultado := Items[High(Items)];
+  end;
+
+  Result := Resultado;
 end;
 
 procedure TForm1.Adicionar;
